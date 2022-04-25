@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    123
     <!-- 路由出口，路由匹配到的页面，会渲染到view -->
     <router-view/>
   </div>
