@@ -11,7 +11,7 @@
 
     <!-- 底部标签导航 
       router:开启路由模式-->
-    <van-tabbar router v-model="active">
+    <van-tabbar v-model="active" router @change="onChange">
       <van-tabbar-item to="/" icon="home-o">首页</van-tabbar-item>
       <van-tabbar-item to="/qa" icon="comment-o">问答</van-tabbar-item>
       <van-tabbar-item to="/video" icon="video-o">视频</van-tabbar-item>
@@ -37,11 +37,20 @@ export default {
 
   computed: {},
 
-  created() {},
+  created() {
+    this.active = window.sessionStorage.getItem('active')
+    console.log(this.active);
+  },
 
   //mounted: {},
 
-  methods: {}
+  methods: {
+    //底部navbar 监听切换事件，保存激活的active值
+    onChange(){
+      console.log(this.active);
+      window.sessionStorage.setItem('active',this.active)
+    }
+  }
 }
 
 </script>

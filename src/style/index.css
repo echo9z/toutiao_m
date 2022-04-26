@@ -76,3 +76,24 @@
 .toutiao-fenxiang:before {
   content: "\e615";
 }
+body {
+  background-color: #f5f7f9;
+}
+.app-nav-bar {
+  background-color: #3296fa;
+}
+.app-nav-bar .van-nav-bar__title {
+  color: #fff;
+}
+.app-nav-bar .van-icon {
+  color: #fff;
+}
+.login-container .van-field__control {
+  padding-left: 10px;
+}
+.login-container .van-field__error-message {
+  padding-left: 10px;
+}
+.login-container .van-field__button {
+  display: flex;
+}

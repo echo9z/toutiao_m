@@ -10,9 +10,9 @@ import 'amfe-flexible'
 // 加载 postcss-pxtorem 将 px单位转换为 rem
 import 'postcss-pxtorem'
 
-//加载 axios请求模块
-import request from '@/utils/request'
-Vue.prototype.$http = request; //将axios 挂在到Vue类的原型对象上
+// //加载 axios请求模块
+// import request from '@/utils/request'
+// Vue.prototype.$http = request; //将axios 挂在到Vue类的原型对象上
 
 // 加载全局样式
 import './style/index.less'
