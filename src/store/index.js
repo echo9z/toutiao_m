@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {getItem,setItem} from '@/utils/storage'
+import {getItem,setItem,removeItem} from '@/utils/storage'
 
 // 用户本地存储的常量名称
 const USER_KEY = 'toutiao-user'
@@ -20,6 +20,12 @@ export default new Vuex.Store({
       //为了防止页面刷新数据丢失，需要把数据存放到本地存储，仅仅是为了数据持久化
       // window.localStorage.setItem('user', JSON.stringify(state.user))
       setItem(USER_KEY, state.user)
+    },
+    removeUser(state){
+      //清空 user
+      state.user = null
+      //清空本地存储
+      removeItem(USER_KEY)
     }
   },
   actions: {

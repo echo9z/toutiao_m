@@ -12,7 +12,10 @@ const request = axios.create({
 request.interceptors.request.use(function (config) {
   // 在发起请求是，统一添加 Authorization 请求头
   const user = store.state.user
-  config.headers.Authorization = user
+  if(user){
+    config.headers.Authorization = `Bearer ${user.token}`
+  }
+  // console.log(config.headers.Authorization);
   return config
 },function (error) {
   // 对请求错误做些什么

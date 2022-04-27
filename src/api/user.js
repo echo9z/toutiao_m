@@ -22,3 +22,10 @@ export const sendSms = mobile => {
     url: `/v1_0/sms/codes/${mobile}`,
   })
 }
+//获取登录用户信息
+export const getCurrentUser = mobile => {
+  return request({
+    method: "get",
+    url: `/v1_0/user`,
+  })
+}

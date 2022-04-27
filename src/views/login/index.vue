@@ -138,6 +138,10 @@ export default {
         // 4处理响应结果
         // 将后端的响应结果 存放到vuex中 容器中
         this.$store.commit('setUser',res.data.data)
+
+        //5.登录成功跳转我的个人页面
+        this.$router.back(); //从那个页面来 退回到那个页面
+        //上面存在问题，先暂时用着
       } catch (error) {
         console.log(error);
         return this.$message.fail('登录失败，手机号或验证码错误')
