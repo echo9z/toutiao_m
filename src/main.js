@@ -17,6 +17,8 @@ import 'postcss-pxtorem'
 // 加载全局样式
 import './style/index.less'
 
+import './utils/dayjs'
+
 Vue.config.productionTip = false // 关闭生产环境
 
 // 创建vue 根实例，将router store配置到根实例中

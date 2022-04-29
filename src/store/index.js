@@ -10,6 +10,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     // user: JSON.parse(window.localStorage.getItem('user')) || null//存放当前用户登录的登录状态（token等信息）
+    //如果用户第二次刷新加载，同getItem从本地存储获得用户的信息
     user: getItem(USER_KEY)//存放当前用户登录的登录状态（token等信息）
   },
   getters: {
