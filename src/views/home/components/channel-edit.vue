@@ -62,7 +62,7 @@
           v-for="(item,index) in getRecommend" 
           :key="index"
           :text="item.name"
-          @click="onAddChannel(item,index)" />
+          @click="onAddChannel(item)" />
       </van-grid>
     </div>
   </div>
@@ -86,11 +86,11 @@ export default {
   components: {},
 
   props: {
-    channels:{
+    channels:{ // 来自父组件home.vue 时当前的频道列表
       type: Array,
       required: true
     },
-    active:{
+    active:{ // 传入父组件中tab标签的激活索引位置，用于我的频道相关的同步红色高亮
       type: Number,
       required: true
     }
@@ -144,7 +144,7 @@ export default {
       // 2.基于所有频道列表 通过过滤函数 与我的频道列表，进行筛选得到剩余的频道
       // 这部用计算属性完成
     },
-    async onAddChannel(channel,index){
+    async onAddChannel(channel){
       this.channels.push(channel) // 这里不需要移除元素，原因是computed中让channels数据发生变化，会重新过滤
       // console.log(channel,index)
       // TODO:数据持久化
@@ -185,6 +185,7 @@ export default {
       }
       
     },
+    // 编辑状态，删除频道
     async deleteUserChannel(channel,index){
       console.log('删除频道',index);
       // 如果删除当前频道之前的频道项
@@ -204,6 +205,7 @@ export default {
         setItem('my-channel',this.channels)
       }
     },
+    // 非编辑状态，切换频道 并进入频道
     switchChannel(index){
       console.log('切换频道');
       // 点击我的频道，关闭编辑频道按钮，同时切换进入当前点击频道内容页tab

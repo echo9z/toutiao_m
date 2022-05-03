@@ -26,7 +26,7 @@
     <van-tabs class="channel-tabs" v-model="active" swipeable >
       <!-- 汉堡按钮 template包裹中的 -->
       <template v-slot:nav-right>
-        <!-- 点击显示弹出层 -->
+        <!-- 点击显示弹出层 isChannelEditShow:让popup显示-->
         <div class="channel-more" @click="isChannelEditShow=true">
           <i class="toutiao toutiao-gengduo"></i>
         </div>
