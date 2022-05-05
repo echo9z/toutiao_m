@@ -15,7 +15,8 @@
           size="small" 
           block 
           icon="sousuo"
-          class="search-btn">搜索</van-button>
+          class="search-btn"
+          to="/search">搜索</van-button>
       </template>
     </van-nav-bar>
 

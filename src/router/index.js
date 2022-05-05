@@ -9,7 +9,7 @@ const routes = [
     path:'/login',
     name:'login',
     //路由懒加载
-    component: ()=> import('@/views/login/')
+    component: ()=> import('@/views/login/') //登录加注册路由
   },
   {
     path:'/',
@@ -18,7 +18,7 @@ const routes = [
       {
         path: '', //默认子路由, 以访问 / 会默认重定向到home组件
         name: 'home',
-        component: () => import('@/views/home/'),
+        component: () => import('@/views/home/'), // 首页路由
       },
       {
         path: '/qa', 
@@ -33,9 +33,15 @@ const routes = [
       {
         path: '/my', 
         name: 'mine',
-        component: () => import('@/views/mine/'),
+        component: () => import('@/views/mine/'), // 我的路由
       },
     ]
+  },
+  {
+    path:'/search',
+    name:'search',
+    //路由懒加载
+    component: ()=> import('@/views/search/') //登录加注册路由
   }
 ]
 

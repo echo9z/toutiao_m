@@ -109,7 +109,7 @@ export default {
       }
       const {data:res} = await getArticles(params)
       console.log(res)
-      this.timestamp = res.data.pre_timestamp
+      
       console.log(this.timestamp);
       // 2.将获取的数据存放到list数组中，注意：是push进数组中
       const {results} = res.data
@@ -120,7 +120,7 @@ export default {
       // 4.数据全部加载完成
       if(results.length){
         // 更新获取下一页的数据的页面，即根据上一次请求的后端返回的数据中timestamp时间戳，去获取文章数据
-        params.timestamp = this.timestamp
+        this.timestamp = res.data.pre_timestamp
       }else{ //如果数组元素 为0，则停止加载
         // 没有数据结束时，把加载状态设置位false不会在触发load事件
         this.finished = true // 当数据全部被加载完毕后，就不会在触发load事件，下拉时就不再加载了

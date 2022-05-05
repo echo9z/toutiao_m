@@ -21,6 +21,7 @@ request.interceptors.request.use(function (config) {
   // 对请求错误做些什么
   return Promise.reject(error);
 })
+
 //响应拦截器
 request.interceptors.response.use(function (response) {
   return response;

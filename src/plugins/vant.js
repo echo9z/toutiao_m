@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { Button,Icon,Tabbar,TabbarItem,NavBar,Cell,CellGroup,Form,Field, 
   Toast,CountDown,Image as VanImage,Grid, GridItem,Dialog,Tab,Tabs,List,
-  PullRefresh,Popup  } from 'vant'
+  PullRefresh,Popup,Search  } from 'vant'
 
 Vue.use(Button)
 Vue.use(Icon)
@@ -21,6 +21,7 @@ Vue.use(Tabs)
 Vue.use(List)
 Vue.use(PullRefresh)
 Vue.use(Popup)
+Vue.use(Search)
 // Vue.use(Toast)
 Vue.prototype.$message = Toast
 Vue.prototype.$dialog = Dialog
