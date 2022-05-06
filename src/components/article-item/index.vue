@@ -6,7 +6,12 @@
 !-->
 <template>
   <div class="article-item">
-    <van-cell >
+    <van-cell :to="{
+      name: 'article',
+      params: {
+        articleId: article.art_id
+      }
+    }">
       <template v-slot:title>
         <!-- vant组件中 van-multi-ellipsis--l3 文字超过三号就用省略号替代 -->
         <div class="title van-multi-ellipsis--l3">

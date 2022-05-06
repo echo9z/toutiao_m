@@ -3,9 +3,27 @@
  */
 import axios from 'axios'
 import store from '@/store'
+import jsonBig from 'json-bigint'
+
 const request = axios.create({
   timeout:3000, //请求3s 超时时间，前端久认为服务异常
-  baseURL:'http://toutiao.itheima.net/' //配置请求根路径
+  baseURL:'http://toutiao.itheima.net/', //配置请求根路径
+  // transformResponse 允许自定义原始的响应数据（字符串） 修改后端返回的数据
+  transformResponse: [function (data) {
+    // 后端返回的数据可能不是JSON 格式字符串
+    // 如果不是的，那么JSONbig.parse() 调用就会报错
+    // 所以需要捕获异常，处理异常
+    try {
+      // console.log(jsonBig.parse(data));
+      // 如果转换成功则返回转换的数据结果
+      return jsonBig.parse(data)  
+    } catch (err) {
+      console.log(data);
+      console.log('转换失败',err);
+      // 如果转换失败，则包装为统一数据格式并返回
+      return data
+    }
+  }]
 })
 
 //请求拦截器

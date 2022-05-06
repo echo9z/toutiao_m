@@ -38,12 +38,11 @@
         finished-text="没有更多了"
         @load="onLoad"
       >
-        <article-item 
+        <article-item       
           v-for="(article,index) in articlesList" 
           :key="index" 
           :article="article"
-          >
-
+        >
         </article-item>
       </van-list>
     </van-pull-refresh>
