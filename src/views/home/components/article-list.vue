@@ -31,12 +31,14 @@
 - `finished 属性`：控制加载结束的状态
   - 在每次请求完毕后，需要手动将 loading 设置为 false，表示本次加载结束
   - 所有数据加载结束，finished 为 true，此时不会触发 load 事件
+  offset="50":当 滚动条与底部距离小于 50 时触发load事件
 -->
       <van-list
         v-model="loading"
         :finished="finished"
         finished-text="没有更多了"
         @load="onLoad"
+        offset="50"
       >
         <article-item       
           v-for="(article,index) in articlesList" 
@@ -95,7 +97,7 @@ export default {
       console.log(res);
       this.list = res.data.results
     }, */
-    // 当van-list组件加载时 或者 组件向下滚动到底部，会触发onLoad事件，自动将loading设置为true处于加载中，当页面内容加载屏幕的底部，停止加载loading设置为false
+    // 上拉加载 当van-list组件加载时 或者 组件向下滚动到底部，会触发onLoad事件，自动将loading设置为true处于加载中，当页面内容加载屏幕的底部，停止加载loading设置为false
     async onLoad (){
       console.log('loading')
 

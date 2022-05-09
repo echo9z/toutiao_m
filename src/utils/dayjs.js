@@ -18,6 +18,10 @@ dayjs.extend(relativeTime)
 Vue.filter('relativeTime',value => {
   return dayjs(value).from(dayjs())
 })
+
+Vue.filter('dataTime',(value,format = 'YYYY/MM/DD HH:mm:dd') => {
+  return dayjs(value).format(format)
+})
 // //格式化 时间
 // console.log(dayjs().format('YYYY/MM/DD HH:mm:dd'));
 

@@ -12,7 +12,9 @@
       title="文章详情"
       left-arrow 
       @click-left="$router.back()"
-    />
+    >
+      <van-icon slot="right" name="ellipsis" size="20" />
+    </van-nav-bar>
 
     <!-- 文章具体内容  -->
     <div class="article-info">
@@ -47,17 +49,24 @@
       </div>
       <!-- 文章内容 
       图片+后端返回html文本内容，用于做测试的，原因是后端返回的img图片链接都是失效了的，或者就手动的添加一张图，为结下来做预览-->
-      <!-- 
-      http://localhost:8080/#/article/8175
-      http://localhost:8080/#/article/7768 -->
+      <!-- http://localhost:8080/#/article/8126-->
       <div 
         class="content markdown-body" 
         v-html="article.content"
         ref="article-content">
       </div>
+
+      <!-- 文章评论列表 
+      isCommentItem是用户点击回按钮，通过孙子组件comment-item -->
+      <comment-list 
+        v-on:totalComment="totalCommentCount = $event"
+        v-on:onReply="onReplyClick($event)"
+        :source='articleId' 
+        :commentList='commentList'
+      ></comment-list>
     </div>
 
-    <!-- 评论 点赞 -->
+    <!--底部 评论 点赞 分享-->
     <div class="article-bottom">
       <!-- 评论按钮 -->
       <van-button
@@ -65,11 +74,12 @@
         type="default"
         round
         size='small'
+        @click="isPostShow = true"
       >写评论</van-button>
       <!-- 有多少人评论了 -->
       <van-icon 
         name="chat-o" 
-        badge="99+" 
+        :badge="totalCommentCount" 
       />
       <!-- 收藏 -->
       <van-icon
@@ -88,6 +98,49 @@
       <!-- 分享 -->
       <van-icon name="share" color="#777777"></van-icon>
     </div>
+
+    <!-- 点击写评论弹出层
+      vant中弹出层组件
+      position：从什么位置弹出，比如bottom从下往上
+      closeable：显示关闭图标
+      close-icon-position：关闭图标位置
+      get-container="body"在body节点上渲染dom元素 -->
+    <van-popup 
+      v-model="isPostShow" 
+      position="bottom" 
+      close-icon-position="top-left"
+      class="post-popup"
+      get-container="body"
+      round
+    >
+    <!-- 发布评论组件 -->
+      <post-comment 
+        v-on:post-success="postSuccess"
+        :target="articleId"
+      />
+    </van-popup>
+    
+    <!-- 对用户回复评论的弹出层 -->
+    <van-popup 
+      v-model="isReplyShow" 
+      position="bottom" 
+      close-icon-position="top-left"
+      class="reply-popup"
+      get-container="body"
+      style="height: 80%"
+      round
+    >
+    <!-- replyComment:值是由comment-item传递到组件中 
+      使用v-if的目的是让组件随着弹出层的显示进行渲染和销毁，防止已加载过的组件不重新渲染导致数据不会重新加载的问题
+      v-if="isReplyShow"：这里通过v-if控制组件的渲染
+      v-if条件渲染，当isReplyShow值为false是组件被销户，当为true是组件被创建-->
+      <comment-reply
+        v-if="isReplyShow"
+        :replyComment="replyComment"
+        :articleId="articleId"
+        @closeReplyPopup="isReplyShow = false"
+      ></comment-reply>
+    </van-popup>
   </div>
 </template>
 
@@ -96,8 +149,11 @@ import {getArticleId,addCollectionsArticle,delCollectionsArticle,
   addLikeArticle,delLikeArticle} from '@/api/article.js'
 // 加载github markdown 文章样式
 import './github-markdown.css'
-import { ImagePreview } from 'vant';
-import { addFollowUser,delFollowUser } from '@/api/user.js';
+import { ImagePreview } from 'vant'
+import { addFollowUser,delFollowUser } from '@/api/user.js'
+import CommentList from './components/comment-list.vue' //评论列表组件
+import PostComment from './components/post-comment.vue'
+import CommentReply from './components/comment-reply.vue'
 
 // ImagePreview({ // van 中图片预览使用
 //   images: [
@@ -114,11 +170,20 @@ export default {
     return {
       article:{}, // 文章信息
       loadingFollow: false, // 用于 当用户点击关注按钮处于加载状态，方式用户多次点击发送请求
-      loadingCollected: false // 用于 当用户点击收藏按钮处于加载状态，方式用户多次点击发送请求
+      loadingCollected: false, // 用于 当用户点击收藏按钮处于加载状态，方式用户多次点击发送请求
+      isPostShow: false, // 控制写评论弹出层
+      commentList: [], // 将 comment-list组件中评论数据，传入到整个文章列表组件中
+      totalCommentCount: 0, // 评论总数，该值是由comment-list传入
+      isReplyShow: false, // 控制对用户的评论的弹出层
+      replyComment: {} // 存放 当前的评论项，传递给comment-reply组件使用
     }
   },
 
-  components: {},
+  components: {
+    CommentList,
+    PostComment,
+    CommentReply
+  },
 
 // 在组件中获取动态路由参数：
 //    方式一：this.$router.params.xxx
@@ -142,7 +207,7 @@ export default {
   watch: {},
 
   methods: {
-    async loadArticle(){
+    async loadArticle(){ // 访问文章详情组件，就初始化加载
       const {data:res} = await getArticleId(this.articleId)
       console.log(res);
       this.article = res.data
@@ -153,6 +218,7 @@ export default {
       // 在事件处理函数调用 ImagePreview 图片预览函数
       this.handlePreviewImage()
     },
+
     // 处理文章图片预览
     handlePreviewImage(){
       // 数据改变影响视图更新（DOM数据）不是立即的，所有如果需要在修改数据之后马上操作被该数据影响的视图DOM，需要把这代码放在$nextTick中
@@ -179,6 +245,7 @@ export default {
         });
       })
     },
+
     // 点击关注，如果已关注，点击执行取消关注；如果未关注，点击执行关注
     async onFollow(){
       // 点击按钮，处于加载状态，防止用户多次点击发送请求
@@ -198,6 +265,7 @@ export default {
       this.article.is_followed = !this.article.is_followed
       this.loadingFollow = false 
     },
+
     // 点击收藏文章
     async onCollected(){
       // 5.添加loading状态防止用户频繁点击
@@ -218,6 +286,7 @@ export default {
       // 4. 提示是否成功收藏
       this.$message.success(`${ this.article.is_collected ? '收藏成功' :'取消收藏'}`)
     },
+
     // 点击点赞文章
     async onLike(){
       // 5.添加loading状态防止用户频繁点击
@@ -239,6 +308,24 @@ export default {
       // this.article.is_collected = !this.article.is_collected
       // 4. 提示是否成功点赞
       this.$message.success(`${ this.article.attitude === 1 ? '成功点赞' :'取消点赞'}`)
+    },
+    
+    postSuccess(comment){ // 当子组件post-comment发布评论成功是，触发函数
+      //将回复评论，添加到回复列表中
+      this.commentList.unshift(comment)
+      // 同时将总评论数+1
+      this.totalCommentCount++
+      // 用户评论完后，关闭弹出层
+      this.isPostShow = false
+    },
+
+    // 接收孙子组件的 评论项
+    onReplyClick(comment){
+      console.log(comment);
+      // 将点击回复评论项 赋值 给当前组件属性
+      this.replyComment = comment
+      //展示用户回复的弹出层
+      this.isReplyShow = true
     }
   }
 }

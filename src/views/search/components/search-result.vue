@@ -12,7 +12,16 @@
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <van-cell v-for="(result,index) in searchList" :key="index" :title="result.title" />
+      <van-cell 
+        v-for="(result,index) in searchList" 
+        :key="index" 
+        :title="result.title"
+        :to="{
+          name: 'article',
+          params: {
+            articleId: result.art_id
+          }
+        }" />
     </van-list>
   </div>
 </template>
@@ -64,8 +73,8 @@ export default {
       // 4.判断是否还有数据
       //   如果有，则更新获取下一页数据的页面
       //   如果没有，则把finished设置为true，关闭家中更多
-      const count = res.data.total_count
-      const per_page = res.data.per_page
+      // const count = res.data.total_count
+      // const per_page = res.data.per_page
       // if(this.params.page <= Math.floor(count/per_page)){
       if(results.length){ // 返回的数组存在元素
         this.params.page = this.params.page + 1

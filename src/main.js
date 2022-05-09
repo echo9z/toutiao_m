@@ -26,5 +26,10 @@ Vue.config.productionTip = false // 关闭生产环境
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: h => h(App),
+  // 在vue实例初始化之后,进行数据侦听和事件/侦听器的配置之前同步调用 钩子函数beforeCreate
+  // beforeCreate(){
+  //   // 通过原型对象，添加属性对象，指向当前的this对象，用于事件中心对象
+  //   Vue.prototype.$bus = this // 事件中心对象
+  // }
 }).$mount('#app')
