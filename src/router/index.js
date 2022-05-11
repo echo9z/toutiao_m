@@ -50,6 +50,12 @@ const routes = [
     component: ()=> import('@/views/article/'), //登录加注册路由
     props: true  // 将动态路由传参 映射到组件的 props中，无论是访问和维护方便
   },
+  { // 用户编辑
+    path:'/user/profile',
+    name:'user-profile',
+    //路由懒加载
+    component: ()=> import('@/views/user-profile/') //登录加注册路由
+  },
 ]
 
 const router = new VueRouter({

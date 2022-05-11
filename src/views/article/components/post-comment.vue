@@ -11,14 +11,14 @@
     autosize：高度自适应，当输入的文字内容越多，会自动提升输入框高度
     v-model.trim能自动取出内容中空格-->
     <van-field
-        v-model.trim="comment"
-        rows="2"
-        autosize
-        type="textarea"
-        maxlength="50"
-        placeholder="请输入留言"
-        show-word-limit
-      />
+      v-model.trim="comment"
+      rows="2"
+      autosize
+      type="textarea"
+      maxlength="50"
+      placeholder="请输入留言"
+      show-word-limit
+    />
     <van-button
       size="small"
       class="post-btn"

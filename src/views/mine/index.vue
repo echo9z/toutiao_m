@@ -20,6 +20,7 @@
                 fit="cover"
                 round
                 :src="currentUser.photo"
+                @click="previewAvatar"
               />
             </div>
           </template>
@@ -28,7 +29,7 @@
             <div class="name">{{currentUser.name}}</div>
           </template>
           <!-- 编辑资料 -->
-          <van-button round size="small" class="update-btn" :key="currentUser.id" >编辑资料</van-button>
+          <van-button round size="small" class="update-btn" :key="currentUser.id" to="/user/profile" >编辑资料</van-button>
         </van-cell>
 
       <!-- 头条 关注 粉丝 获赞 -->
@@ -138,6 +139,10 @@ export default {
         console.log(res);
         this.currentUser = res.data
       }
+    },
+    // 头像预览
+    previewAvatar(){
+      this.$imgPreview([this.currentUser.photo]);
     }
   }
 }

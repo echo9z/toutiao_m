@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { Button,Icon,Tabbar,TabbarItem,NavBar,Cell,CellGroup,Form,Field, 
   Toast,CountDown,Image as VanImage,Grid, GridItem,Dialog,Tab,Tabs,List,
-  PullRefresh,Popup,Search  } from 'vant'
+  PullRefresh,Popup,Search,Picker,DatetimePicker,ImagePreview  } from 'vant'
 
 Vue.use(Button)
 Vue.use(Icon)
@@ -22,6 +22,10 @@ Vue.use(List)
 Vue.use(PullRefresh)
 Vue.use(Popup)
 Vue.use(Search)
+Vue.use(Picker)
+Vue.use(DatetimePicker)
+
 // Vue.use(Toast)
 Vue.prototype.$message = Toast
 Vue.prototype.$dialog = Dialog
+Vue.prototype.$imgPreview = ImagePreview
