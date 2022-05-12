@@ -7,67 +7,84 @@
 <template>
   <div class="article-container">
     <!-- 文章导航 -->
-    <van-nav-bar
-      class="app-nav-bar"
-      title="文章详情"
-      left-arrow 
-      @click-left="$router.back()"
-    >
-      <van-icon slot="right" name="ellipsis" size="20" />
-    </van-nav-bar>
+    <div ref="header">
+      <van-nav-bar
+        class="app-nav-bar"
+        left-arrow 
+        @click-left="$router.back()"
+      >
+        <div class="nav-author" slot="title" v-if="showNavAuthor">
+          <van-image round width="7vw" height="7vw" :src="article.aut_photo"/>
+          <span class="name">{{article.aut_name}}</span>
+          <span class="line">|</span>
+          <span class="follow" @click="onFollow">{{article.is_followed ? '已关注': "关注"}}</span>
+        </div>
+        <div slot="title" v-else >文章详情</div>
+        <van-icon slot="right" name="ellipsis" size="20" />
+      </van-nav-bar>
+    </div>
+      
+    <div class="article-info" ref="wrapper" @scroll="onScroll">
+      <!-- 文章具体内容  -->
+      <div ref="content">
+        <!-- 标题 -->
+        <h1 class="title">{{article.title}}</h1>
+        <!-- 文章作者 头像 关注 -->
+        <div>
+          <van-cell center class="author-info" >
+            <!-- <div slot="title" class="author-name">{{article.aut_name}}</div> -->
+            <div slot="title" class="author-name">echo9z</div>
+            <van-image 
+              slot="icon"
+              class="author-avatar"
+              round
+              fit="cover"
+              :src="article.aut_photo"
+            />
+            <div slot="label" class="pubdate">
+              {{article.pubdate | relativeTime}}
+            </div>
+            <!-- 关注按钮 -->
+            <van-button 
+              class="follow-btn"
+              round 
+              size='small'
+              :loading='loadingFollow'
+              :type="article.is_followed ? 'default': 'info'"
+              :icon="article.is_followed ? '': 'plus'"
+              @click="onFollow"
+              >{{article.is_followed ? '已关注': "关注"}}</van-button>
+          </van-cell>
+        </div>
 
-    <!-- 文章具体内容  -->
-    <div class="article-info">
-      <!-- 标题 -->
-      <h1 class="title">{{article.title}}</h1>
-      <!-- 文章作者 头像 关注 -->
-      <div>
-        <van-cell center class="author-info" >
-          <!-- <div slot="title" class="author-name">{{article.aut_name}}</div> -->
-          <div slot="title" class="author-name">echo9z</div>
-          <van-image 
-            slot="icon"
-            class="author-avatar"
-            round
-            fit="cover"
-            :src="article.aut_photo"
-          />
-          <div slot="label" class="pubdate">
-            {{article.pubdate | relativeTime}}
-          </div>
-          <!-- 关注按钮 -->
-          <van-button 
-            class="follow-btn"
-            round 
-            size='small'
-            :loading='loadingFollow'
-            :type="article.is_followed ? 'default': 'info'"
-            :icon="article.is_followed ? '': 'plus'"
-            @click="onFollow"
-            >{{article.is_followed ? '已关注': "关注"}}</van-button>
-        </van-cell>
-      </div>
-      <!-- 文章内容 
-      图片+后端返回html文本内容，用于做测试的，原因是后端返回的img图片链接都是失效了的，或者就手动的添加一张图，为结下来做预览-->
-      <!-- http://localhost:8080/#/article/8126-->
-      <div 
-        class="content markdown-body" 
-        v-html="article.content"
-        ref="article-content">
+        <!-- 文章内容 
+        图片+后端返回html文本内容，用于做测试的，原因是后端返回的img图片链接都是失效了的，或者就手动的添加一张图，为结下来做预览-->
+        <!-- http://localhost:8080/#/article/8126-->
+        <div 
+          class="content markdown-body" 
+          v-html="article.content"
+          ref="article-content"
+        >
+        </div>
       </div>
 
       <!-- 文章评论列表 
-      isCommentItem是用户点击回按钮，通过孙子组件comment-item -->
-      <comment-list 
-        v-on:totalComment="totalCommentCount = $event"
-        v-on:onReply="onReplyClick($event)"
-        :source='articleId' 
-        :commentList='commentList'
-      ></comment-list>
+        isCommentItem是用户点击回按钮，通过孙子组件comment-item -->
+      <div>
+        <comment-list 
+          v-on:totalComment="totalCommentCount = $event"
+          v-on:onReply="onReplyClick($event)"
+          :source='articleId' 
+          :commentList='commentList'
+        ></comment-list>
+      </div>
+      <!-- /文章评论列表 -->
     </div>
 
+    
+
     <!--底部 评论 点赞 分享-->
-    <div class="article-bottom">
+    <div class="article-bottom" >
       <!-- 评论按钮 -->
       <van-button
         class="comment-btn"
@@ -80,6 +97,7 @@
       <van-icon 
         name="chat-o" 
         :badge="totalCommentCount" 
+        @click="srollToComment"
       />
       <!-- 收藏 -->
       <van-icon
@@ -175,7 +193,9 @@ export default {
       commentList: [], // 将 comment-list组件中评论数据，传入到整个文章列表组件中
       totalCommentCount: 0, // 评论总数，该值是由comment-list传入
       isReplyShow: false, // 控制对用户的评论的弹出层
-      replyComment: {} // 存放 当前的评论项，传递给comment-reply组件使用
+      replyComment: {}, // 存放 当前的评论项，传递给comment-reply组件使用
+      toComment: false, // 是否滚动到评论位置
+      showNavAuthor: false // 控制导航栏部分的的隐藏和显示
     }
   },
 
@@ -326,6 +346,30 @@ export default {
       this.replyComment = comment
       //展示用户回复的弹出层
       this.isReplyShow = true
+    },
+
+    // 滚动到评论位置
+    srollToComment(){
+      //评论区位置 = 头部高度 + 内容高度 
+      const headerHeight = this.$refs.header.offsetHeight // 导航栏高度
+      const contentHeight = this.$refs.content.offsetHeight // 文章主体高度
+      console.log(headerHeight , contentHeight);
+      // 是否滚动到评论，切换状态
+      this.toComment = !this.toComment
+      console.log(this.$refs.wrapper.scrollTop);
+      // 来回切换
+      if (this.toComment) {
+        this.$refs.wrapper.scrollTop = headerHeight + contentHeight // 通过设置 wrapper 的向上滚动的区域，定位到评论位置
+      } else {
+        this.$refs.wrapper.scrollTop = 0 // 顶部
+      }
+    },
+    // 监听文章内容的滚动事件
+    onScroll(){
+      // 通过 文章内容主体的向上滚动高度 是否 大于 nav-bar 的高度
+      const scrollTop = this.$refs.wrapper.scrollTop
+      const headerHeight = this.$refs.header.offsetHeight
+      this.showNavAuthor = scrollTop > headerHeight
     }
   }
 }
@@ -334,6 +378,30 @@ export default {
 <style lang='less' scoped>
 .article-container{
   background-color: #fff;
+  .app-nav-bar{
+    /deep/ .van-nav-bar__title {
+      max-width: 270px;
+      width: 270px;
+    }
+    .nav-author {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      > span {
+        font-size: 12px;
+        padding-left: 5px;
+      }
+      .line {
+        color: #ccc;
+        position: relative;
+        top: -1px;
+      }
+      .follow {
+        color: #fff;
+      }
+    }
+  }
+
   .article-info{ // 包含文章标题 与 文章信息
     background-color: #fff;
     position:fixed;
