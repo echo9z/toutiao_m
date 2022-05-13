@@ -15,7 +15,8 @@
       >
         <div class="nav-author" slot="title" v-if="showNavAuthor">
           <van-image round width="7vw" height="7vw" :src="article.aut_photo"/>
-          <span class="name">{{article.aut_name}}</span>
+          <!-- <span class="name">{{article.aut_name}}</span> -->
+          <span class="name">echo9z</span>
           <span class="line">|</span>
           <span class="follow" @click="onFollow">{{article.is_followed ? '已关注': "关注"}}</span>
         </div>

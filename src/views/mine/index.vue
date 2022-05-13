@@ -81,7 +81,7 @@
     <!-- 可以通过 url 属性进行 URL 跳转，或通过 to 属性进行路由跳转。 
         is-link:展示右边的箭头-->
       <van-cell title="消息通知" is-link to="/" />
-      <van-cell title="echo同学" class="mb-4" is-link to="/" />
+      <van-cell title="echo同学" class="mb-4" is-link to="/user/chat" />
 
       <van-cell v-if="user" :column-num="1" center class="logout" >
         <van-button block @click="onLogout" >退出登录</van-button>

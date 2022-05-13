@@ -56,6 +56,12 @@ const routes = [
     //路由懒加载
     component: ()=> import('@/views/user-profile/') //登录加注册路由
   },
+  { // 机器人聊天
+    path:'/user/chat',
+    name:'user-chat',
+    //路由懒加载
+    component: ()=> import('@/views/user-chat/') //登录加注册路由
+  },
 ]
 
 const router = new VueRouter({

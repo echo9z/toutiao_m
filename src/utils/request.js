@@ -5,9 +5,11 @@ import axios from 'axios'
 import store from '@/store'
 import jsonBig from 'json-bigint'
 
+export const baseURL = 'http://toutiao.itheima.net/'
+
 const request = axios.create({
   timeout:3000, //请求3s 超时时间，前端久认为服务异常
-  baseURL:'http://toutiao.itheima.net/', //配置请求根路径
+  baseURL, //配置请求根路径
   // transformResponse 允许自定义原始的响应数据（字符串） 修改后端返回的数据
   transformResponse: [function (data) {
     // 后端返回的数据可能不是JSON 格式字符串
