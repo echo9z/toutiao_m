@@ -5,7 +5,7 @@
 * @date 2022/04/28 11:26:25
 !-->
 <template>
-  <div class="article-list">
+  <div class="article-list" ref="article-list" >
     <!-- 
       下拉刷新组件 pull-refresh
       v-model绑定的值为false表示加载完成，true为下拉加载中
@@ -54,6 +54,7 @@
 <script>
 import { getArticles } from '@/api/article'
 import ArticleItem from '@/components/article-item/'
+import {debounce} from 'lodash'
 
 export default {
   name: 'article-list',
@@ -70,7 +71,8 @@ export default {
       finished: false, //当为true时 不会在触发load事件，下拉时就不再加载更多
       timestamp: null, // 记录本次请求文章列表的时间戳，用于下一次下拉请求文章列 即下一页
       pullDownRefreshing: false, //处于下拉刷新状态
-      refreshSuccessText: '' // 下拉刷新 提示有刷新的多少条数据
+      refreshSuccessText: '', // 下拉刷新 提示有刷新的多少条数据
+      scrollTop: 0 // 记录上次用户滑动文章列表的向上滚动的距离
     }
   },
   
@@ -82,8 +84,27 @@ export default {
 
   created() {
   },
+  // 被keep-alive包裹的组件，被缓存，都可以使用这两个生命周期函数
+  // <keep-alive> 内被切换，它的 activated 和 deactivated 这两个生命周期钩子函数将会被对应执行。
+  activated(){ // 进入article-list组件，被从缓存中被激活，执行activated
+    console.log('从缓存中被激活时');
+    // 把记录的scrollTop 直至 到上次滑动位置
+    this.$refs['article-list'].scrollTop = this.scrollTop
+  },
+  deactivated(){
+    console.log('失去缓存中激活状态'); // 即 当离开当前article-list组件是当前组件被缓存，同时失去活动，触发deactivated
+  },
 
-  //mounted: {},
+  // 所由dom 元素被渲染到页面上
+  mounted() {
+    const article = this.$refs['article-list']
+    // 监听文章列表的滚动事件
+    article.onscroll = debounce(() => { // 通过防抖函数，避免事件的重复触发
+      // 当滑动到某个位置 记录 list 向上滑动的位置
+      console.log(1);
+      this.scrollTop = article.scrollTop
+    },50)
+  },
 
   methods: {
     /* async getCurrentTimestamp(){
@@ -154,7 +175,7 @@ export default {
         this.pullDownRefreshing = false;
         this.$message.fail('刷新失败')
       }
-    }
+    },
   }
 }
 

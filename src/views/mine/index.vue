@@ -64,7 +64,12 @@
 
       <!-- 未登录的结构 -->
       <div v-else class="not-login">
-        <div @click="$router.push('/login')">
+        <div @click="$router.push({
+          name: 'login',
+          query: {
+            redirect: '/my'
+          }
+        })">
           <img src="./nologout.png" alt="">
         </div>
         <div>

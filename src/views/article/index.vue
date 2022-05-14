@@ -293,7 +293,7 @@ export default {
       this.$message.loading({
         message: '处理中...',
         forbidClick: true, //禁止背景点击，类似于按钮处理加载状态，但是loading相当于有一个遮罩
-        duration: 0 // 展示时长(ms)，值为 0 时，toast一直展示，默认是2000
+        duration: 2000 // 展示时长(ms)，值为 0 时，toast一直展示，默认是2000
       });
       if(this.article.is_collected){
         // 1.已关注，取消关注
@@ -314,7 +314,7 @@ export default {
       this.$message.loading({
         message: '处理中...',
         forbidClick: true, //禁止背景点击，类似于按钮处理加载状态，但是loading相当于有一个遮罩
-        duration: 0 // 展示时长(ms)，值为 0 时，toast一直展示，默认是2000
+        duration: 2000 // 展示时长(ms)，值为 0 时，toast一直展示，默认是2000
       });
       if(this.article.attitude === 1){
         // 1.已点赞，取消点赞

@@ -7,7 +7,10 @@
 <template>
   <div class="layout-container">
     <!-- 子路由出口，用于显示展示 -->
-    <router-view></router-view>
+    <keep-alive>
+      <!-- 组件缓存：这里的缓存不是持久化 -->
+      <router-view></router-view>
+    </keep-alive>
 
     <!-- 底部标签导航 
       router:开启路由模式-->
@@ -23,7 +26,7 @@
 
 <script>
 export default {
-  name: '',
+  name: 'LayoutIndex',
 
   data () {
     return {
@@ -42,7 +45,10 @@ export default {
     console.log(this.active);
   },
 
-  //mounted: {},
+  mounted(){
+    // 当组件LayoutIndex 被渲染完毕后，再重新添加LayoutIndex组件缓存
+    this.$store.commit('addCachePage','LayoutIndex')
+  },
 
   methods: {
     //底部navbar 监听切换事件，保存激活的active值

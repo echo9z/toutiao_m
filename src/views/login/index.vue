@@ -1,5 +1,5 @@
 <!--
-* @description 
+* @description 注册 / 登录 组件
 * @fileName index.vue
 * @author echo9z
 * @date 2022/04/25 13:57:00
@@ -139,12 +139,19 @@ export default {
         // 将后端的响应结果 存放到vuex中 容器中
         this.$store.commit('setUser',res.data.data)
 
+        // 当用户登录成功，将 app根组件中的 keep alive对 LayoutIndex组件缓存移除，让用户在此登录跳转login组件，重新渲染login组件
+        this.$store.commit('removeCachePage','LayoutIndex')
+
         //5.登录成功跳转我的个人页面
-        this.$router.back(); //从那个页面来 退回到那个页面
+        // this.$router.back(); //从那个页面来 退回到那个页面
         //上面存在问题，先暂时用着
+        //query.redirect 记录离开页面，跳转新的页面，新的页面请求url的查询参数记录这离开页的url；如果为空直接跳转至 / 
+        // console.log(this.$router); //$router是用来操作路由的
+        // console.log(this.$route); //$route是用来获取路由信息的。
+        this.$router.push(this.$route.query.redirect || '/') 
       } catch (error) {
         console.log(error);
-        return this.$message.fail('登录失败，手机号或验证码错误')
+        this.$message.fail('登录失败，手机号或验证码错误')
       }
       
     },
